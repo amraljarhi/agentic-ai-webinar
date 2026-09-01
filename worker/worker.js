@@ -109,6 +109,7 @@ const CONF_ID = "782 105 735#";
 const EVENT_TITLE = "Beyond Copilot: Building Autonomous Developer Workflows";
 const EVENT_WHEN = "Tuesday, 23 September 2026 · 10:00–11:10 CEST";
 const REG_PAGE = "https://amraljarhi.github.io/agentic-ai-webinar/";
+const ICS_URL = "https://amraljarhi.github.io/agentic-ai-webinar/webinar.ics";
 
 function htmlEscape(s) {
   return String(s == null ? "" : s)
@@ -149,7 +150,8 @@ function renderEmailHtml(firstName) {
 <a href="${JOIN_URL}" style="display:inline-block;padding:14px 40px;font-size:16px;font-weight:bold;color:#fff;text-decoration:none;border-radius:10px;">Join the webinar</a>
 </td></tr></table>
 <p style="text-align:center;margin:14px 0 0 0;font-size:13px;color:#57606a;">Meeting ID: <strong style="color:#0d1117;">${MEETING_ID}</strong> &nbsp;·&nbsp; Passcode: <strong style="color:#0d1117;">${PASSCODE}</strong></p>
-<p style="text-align:center;margin:6px 0 0 0;font-size:12px;color:#8b949e;">Dial-in (US): ${DIAL_IN} &nbsp;·&nbsp; Conf ID: ${CONF_ID}</p></td></tr>
+<p style="text-align:center;margin:6px 0 0 0;font-size:12px;color:#8b949e;">Dial-in (US): ${DIAL_IN} &nbsp;·&nbsp; Conf ID: ${CONF_ID}</p>
+<p style="text-align:center;margin:14px 0 0 0;font-size:13px;"><a href="${ICS_URL}" style="color:#6b3fd4;text-decoration:underline;">&#10133; Add to calendar</a></p></td></tr>
 <tr><td style="padding:26px 32px 8px 32px;font-family:Arial,Helvetica,sans-serif;">
 <h2 style="margin:0 0 12px 0;font-size:16px;color:#0d1117;">What you'll walk away with</h2>
 <div style="font-size:14px;color:#24292f;line-height:1.6;">
@@ -184,6 +186,9 @@ Meeting ID: ${MEETING_ID}
 Passcode: ${PASSCODE}
 Dial-in (US): ${DIAL_IN}
 Phone conference ID: ${CONF_ID}
+
+ADD TO CALENDAR
+${ICS_URL}
 
 WHAT YOU'LL WALK AWAY WITH
 - A practical picture of agentic AI across the software lifecycle.

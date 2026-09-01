@@ -1,0 +1,46 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//GitHub x Eficode//Beyond Copilot Webinar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VTIMEZONE
+TZID:Europe/Copenhagen
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:beyond-copilot-webinar-2026-09-23@amraljarhi.github.io
+DTSTAMP:20260901T000000Z
+DTSTART;TZID=Europe/Copenhagen:20260923T100000
+DTEND;TZID=Europe/Copenhagen:20260923T111000
+SUMMARY:Beyond Copilot: Building Autonomous Developer Workflows
+LOCATION:Online — Microsoft Teams
+URL:https://teams.microsoft.com/meet/27227699504930?p=ZoOx13Z5h7R7pPrAS9
+DESCRIPTION:Beyond Copilot: Building Autonomous Developer Workflows\nA GitH
+ ub x Eficode live webinar.\n\nJoin the webinar: https://teams.microsoft.co
+ m/meet/27227699504930?p=ZoOx13Z5h7R7pPrAS9\nMeeting ID: 272 276 995 049 30
+ \nPasscode: dh3D5kB9\nDial-in (US): +1 323-849-4874\,\,782105735#\nPhone c
+ onference ID: 782 105 735#\n\nSpeakers: Ahmed Magdy (Eficode)\, Rickard Ho
+ le Falck (Eficode)\nRegistration page: https://amraljarhi.github.io/agenti
+ c-ai-webinar/
+STATUS:CONFIRMED
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT15M
+ACTION:DISPLAY
+DESCRIPTION:Reminder: Beyond Copilot webinar starts in 15 minutes
+END:VALARM
+END:VEVENT
+END:VCALENDAR

@@ -18,7 +18,7 @@ Passcode: dh3D5kB9
 Dial-in (US): +1 323-849-4874,,782105735#
 Phone conference ID: 782 105 735#
 
-Add to calendar: {{calendar_ics_url}}
+Add to calendar: https://amraljarhi.github.io/agentic-ai-webinar/webinar.ics
 
 WHAT YOU'LL WALK AWAY WITH
 - A practical picture of agentic AI across the software lifecycle — beyond IDE coding assistants.
