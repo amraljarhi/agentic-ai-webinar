@@ -1,0 +1,39 @@
+You're registered — Beyond Copilot: Building Autonomous Developer Workflows
+(GitHub × Eficode live webinar)
+
+Hi {{first_name}},
+
+Thanks for registering — your spot is saved.
+
+WHEN
+Tuesday, 23 September 2026 · 10:00–11:10 CEST
+
+WHERE
+Online — Microsoft Teams
+
+JOIN THE WEBINAR
+https://teams.microsoft.com/meet/27227699504930?p=ZoOx13Z5h7R7pPrAS9
+Meeting ID: 272 276 995 049 30
+Passcode: dh3D5kB9
+Dial-in (US): +1 323-849-4874,,782105735#
+Phone conference ID: 782 105 735#
+
+Add to calendar: {{calendar_ics_url}}
+
+WHAT YOU'LL WALK AWAY WITH
+- A practical picture of agentic AI across the software lifecycle — beyond IDE coding assistants.
+- How teams automate planning, dev, testing, review & delivery with AI and GitHub Actions.
+- How to evaluate, test and govern AI agents for quality and trust at scale.
+- Patterns for scaling AI adoption across engineering with the right controls.
+
+YOUR SPEAKERS
+- Ahmed Magdy — Eficode
+- Rickard Hole Falck — Eficode
+
+Can't make it live? Reply to this email and we'll send the recording.
+
+You're receiving this because you registered at
+https://amraljarhi.github.io/agentic-ai-webinar/
+Questions? Just reply.
+
+GitHub × Eficode
