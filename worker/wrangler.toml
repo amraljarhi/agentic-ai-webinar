@@ -10,5 +10,16 @@ FILE_PATH = "registrations.csv"
 BRANCH = "main"
 ALLOWED_ORIGIN = "https://amraljarhi.github.io"
 
+# --- Confirmation email (Resend) ---
+# Set EMAIL_ENABLED = "true" once RESEND_API_KEY (secret) and FROM_EMAIL are ready.
+# FROM_EMAIL must be a verified sender in Resend (a verified domain, or a testing
+# address). REPLY_TO is optional (e.g. your own address so replies reach you).
+EMAIL_ENABLED = "false"
+FROM_EMAIL = "onboarding@resend.dev"
+FROM_NAME = "GitHub x Eficode Webinar"
+# REPLY_TO = "you@example.com"
+
 # GH_TOKEN is a SECRET — do not put it here. Set it with:
 #   wrangler secret put GH_TOKEN
+# RESEND_API_KEY is also a SECRET:
+#   wrangler secret put RESEND_API_KEY
