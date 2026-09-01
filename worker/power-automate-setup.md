@@ -1,4 +1,4 @@
-# Confirmation emails via Power Automate — DRAFT approach
+# Confirmation emails via Power Automate — DRAFT approach ("Draft an email message")
 
 The Worker calls a Power Automate flow that **creates a draft** in your Outlook
 mailbox for each registration. You review the draft and hit **Send** yourself.
@@ -21,25 +21,17 @@ Resend) instead — see "Fully automated alternative" below.
 ## The flow (2 actions)
 
 1. **Trigger:** *When an HTTP request is received* (the URL is already wired into
-   the Worker secret `POWER_AUTOMATE_URL` — don't recreate it).
-2. **Action:** *Send an HTTP request* (**Office 365 Outlook** connector — not the
-   premium "HTTP"):
-   - **Method:** `POST`
-   - **Uri:** `https://graph.microsoft.com/v1.0/me/messages`
-   - **Headers:** `Content-Type` -> `application/json`
-   - **Body:** expression `triggerBody()`
+   the Worker secret `POWER_AUTOMATE_URL` — don't recreate it). Its Request Body
+   JSON Schema stays: `{to, subject, html, text, firstName}`.
+2. **Action:** *Draft an email message* (**Office 365 Outlook** connector). This
+   creates a draft in your Drafts folder instead of sending. Map:
+   - **To:** dynamic content `to`
+   - **Subject:** dynamic content `subject`
+   - **Body:** click the **</>** (code view) icon, then insert dynamic content `html`
 
-That's it. The Worker posts a ready-made Microsoft Graph *message* object
-(`subject`, HTML `body`, `toRecipients`), and the flow forwards it straight to
-Graph with `triggerBody()`, so Power Automate handles all JSON escaping.
-
-### If the Uri errors
-
-Some tenants want a relative path on the Office 365 Outlook "Send an HTTP
-request" action. If the full URL fails, try Uri `/v1.0/me/messages`.
-
-The connection needs `Mail.ReadWrite` (the Office 365 Outlook connector has it by
-default).
+That's it. The Worker posts `{to, subject, html, text, firstName}`; the flow drops
+`to`/`subject`/`html` into the draft. Same mapping as "Send an email (V2)", but it
+drafts instead of sends.
 
 ## Using it
 
