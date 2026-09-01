@@ -201,16 +201,31 @@ GitHub x Eficode`;
 
 async function sendConfirmationEmail(env, toEmail, fullName) {
   if (env.EMAIL_ENABLED !== "true") return;
-  if (!env.RESEND_API_KEY || !env.FROM_EMAIL) return;
   const firstName = firstNameFrom(fullName);
+  const html = renderEmailHtml(firstName);
+  const text = renderEmailText(firstName);
+  const subject = `You're registered: Beyond Copilot (23 Sep, 10:00 CEST) — your Teams link inside`;
+
+  // Provider 1: Power Automate flow (Office 365 Outlook) — sends from your mailbox.
+  // Set POWER_AUTOMATE_URL (secret) to the flow's "When an HTTP request is received" URL.
+  if (env.POWER_AUTOMATE_URL) {
+    try {
+      const res = await fetch(env.POWER_AUTOMATE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to: toEmail, subject, html, text, firstName }),
+      });
+      if (!res.ok) console.log("Power Automate send failed:", res.status, await res.text());
+    } catch (e) {
+      console.log("Power Automate send error:", e.message);
+    }
+    return;
+  }
+
+  // Provider 2: Resend (needs a verified sender domain).
+  if (!env.RESEND_API_KEY || !env.FROM_EMAIL) return;
   const from = env.FROM_NAME ? `${env.FROM_NAME} <${env.FROM_EMAIL}>` : env.FROM_EMAIL;
-  const payload = {
-    from,
-    to: [toEmail],
-    subject: `You're registered: Beyond Copilot (23 Sep, 10:00 CEST) — your Teams link inside`,
-    html: renderEmailHtml(firstName),
-    text: renderEmailText(firstName),
-  };
+  const payload = { from, to: [toEmail], subject, html, text };
   if (env.REPLY_TO) payload.reply_to = env.REPLY_TO;
   try {
     const res = await fetch("https://api.resend.com/emails", {
