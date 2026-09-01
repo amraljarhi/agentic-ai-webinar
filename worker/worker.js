@@ -211,18 +211,30 @@ async function sendConfirmationEmail(env, toEmail, fullName) {
   const text = renderEmailText(firstName);
   const subject = `You're registered: Beyond Copilot (23 Sep, 10:00 CEST) — your Teams link inside`;
 
-  // Provider 1: Power Automate flow (Office 365 Outlook) — sends from your mailbox.
+  // Provider 1: Power Automate flow (Office 365 Outlook).
+  // The flow CREATES A DRAFT in your mailbox via Microsoft Graph (POST /me/messages),
+  // which you then review and send manually. This avoids the tenant mail-flow rule that
+  // blocks Power Platform from *sending* to external recipients — creating a draft is not
+  // a send, and your manual send from Outlook is a normal user email (not blocked).
+  //
+  // The Worker posts a ready-made Graph "message" object so Power Automate can forward it
+  // straight to Graph (Body = triggerBody()) without any manual JSON escaping.
   // Set POWER_AUTOMATE_URL (secret) to the flow's "When an HTTP request is received" URL.
   if (env.POWER_AUTOMATE_URL) {
+    const graphMessage = {
+      subject,
+      body: { contentType: "HTML", content: html },
+      toRecipients: [{ emailAddress: { address: toEmail } }],
+    };
     try {
       const res = await fetch(env.POWER_AUTOMATE_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to: toEmail, subject, html, text, firstName }),
+        body: JSON.stringify(graphMessage),
       });
-      if (!res.ok) console.log("Power Automate send failed:", res.status, await res.text());
+      if (!res.ok) console.log("Power Automate draft failed:", res.status, await res.text());
     } catch (e) {
-      console.log("Power Automate send error:", e.message);
+      console.log("Power Automate draft error:", e.message);
     }
     return;
   }

@@ -1,46 +1,63 @@
-# Send confirmation emails from your Outlook via Power Automate
+# Confirmation emails via Power Automate — DRAFT approach
 
-This lets the Worker send the confirmation email **from your Microsoft/Outlook
-mailbox** — no domain or DNS needed. You sign in once; the flow does the rest.
+The Worker calls a Power Automate flow that **creates a draft** in your Outlook
+mailbox for each registration. You review the draft and hit **Send** yourself.
 
-## Build the flow (~5 minutes, all clicks)
+## Why a draft (and not an automatic send)
 
-1. Go to **https://make.powerautomate.com** (sign in with your work account).
-2. Left menu → **Create** → **Instant cloud flow**.
-3. Name: `Webinar confirmation email`. Choose trigger
-   **"When an HTTP request is received"** → **Create**.
-4. In that trigger, click **"Use sample payload to generate schema"** and paste:
+The Microsoft tenant has a security mail-flow rule that **blocks Power Platform
+/ Flow from _sending_ email to external recipients**. Automatic sends via Flow
+bounce with *"Security Policy at Microsoft does not allow emails to external
+recipients using Power Platforms like FLOW."*
 
-   ```json
-   { "to": "a@b.com", "subject": "x", "html": "<p>x</p>", "text": "x", "firstName": "x" }
-   ```
+Creating a **draft** is **not** a send, so the rule doesn't apply. When you then
+click **Send** in Outlook, it goes out as a normal user email (also not blocked).
 
-   Click **Done**.
-5. Click **+ New step** → search **"Send an email (V2)"** (Office 365 Outlook).
-   Sign in if prompted.
-   - **To:** click the field → Dynamic content → **to**
-   - **Subject:** Dynamic content → **subject**
-   - **Body:** click the field, then the small **</>** (code view) icon, and pick
-     Dynamic content → **html**
-   - (Optional) Advanced options → **Importance: Normal**. Leave "Is HTML" = Yes.
-6. Click **Save**.
-7. Open the **first step** (the HTTP trigger) again — it now shows
-   **"HTTP POST URL"**. Click the copy icon.
+Trade-off: it's semi-automated — one draft per registrant lands in **Drafts**,
+and you send each manually. Fine for modest volume. For fully hands-off sending
+to external recipients, switch to a transactional provider (Brevo / SendGrid /
+Resend) instead — see "Fully automated alternative" below.
 
-## Give me the URL
+## The flow (2 actions)
 
-Paste that HTTP POST URL back into the chat. I'll:
-- store it as the Worker secret `POWER_AUTOMATE_URL`,
-- set `EMAIL_ENABLED = "true"` and redeploy,
-- send a test registration and confirm the email arrives.
+1. **Trigger:** *When an HTTP request is received* (the URL is already wired into
+   the Worker secret `POWER_AUTOMATE_URL` — don't recreate it).
+2. **Action:** *Send an HTTP request* (**Office 365 Outlook** connector — not the
+   premium "HTTP"):
+   - **Method:** `POST`
+   - **Uri:** `https://graph.microsoft.com/v1.0/me/messages`
+   - **Headers:** `Content-Type` -> `application/json`
+   - **Body:** expression `triggerBody()`
 
-> The URL contains a signature and acts like a password — anyone with it can
-> trigger the flow. If it ever leaks, open the flow, edit the trigger, and
-> regenerate (or delete + recreate the flow).
+That's it. The Worker posts a ready-made Microsoft Graph *message* object
+(`subject`, HTML `body`, `toRecipients`), and the flow forwards it straight to
+Graph with `triggerBody()`, so Power Automate handles all JSON escaping.
+
+### If the Uri errors
+
+Some tenants want a relative path on the Office 365 Outlook "Send an HTTP
+request" action. If the full URL fails, try Uri `/v1.0/me/messages`.
+
+The connection needs `Mail.ReadWrite` (the Office 365 Outlook connector has it by
+default).
+
+## Using it
+
+1. A registration comes in -> a **draft** addressed to the registrant appears in
+   your Outlook **Drafts** folder (subject: "You're registered: Beyond Copilot...").
+2. Open it, glance over it, click **Send**.
+
+## Fully automated alternative (no manual sends)
+
+If you'd rather not click Send per registrant, rewire the Worker to a
+transactional email API that allows external delivery with a single verified
+sender (no domain needed): **Brevo** (300/day free) or **SendGrid** (100/day
+free, "Single Sender Verification"). The Worker already has a provider branch;
+ask to switch and it's a few-minute change.
 
 ## Notes
 
-- The email content is rendered inside the Worker (`renderEmailHtml` /
-  `renderEmailText` in `worker.js`) and mirrors `email/confirmation.*`.
-- If you later get a domain, you can switch to Resend instead by setting
-  `RESEND_API_KEY` + `FROM_EMAIL` and clearing `POWER_AUTOMATE_URL`.
+- Email content is rendered in the Worker (`renderEmailHtml` / `renderEmailText`
+  in `worker.js`) and mirrors `email/confirmation.*`.
+- The draft is created in the mailbox connected to the Office 365 Outlook
+  connection (`/me`).
