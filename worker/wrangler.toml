@@ -14,7 +14,7 @@ ALLOWED_ORIGIN = "https://amraljarhi.github.io"
 # Set EMAIL_ENABLED = "true" once RESEND_API_KEY (secret) and FROM_EMAIL are ready.
 # FROM_EMAIL must be a verified sender in Resend (a verified domain, or a testing
 # address). REPLY_TO is optional (e.g. your own address so replies reach you).
-EMAIL_ENABLED = "false"
+EMAIL_ENABLED = "true"
 FROM_EMAIL = "onboarding@resend.dev"
 FROM_NAME = "GitHub x Eficode Webinar"
 # REPLY_TO = "you@example.com"
