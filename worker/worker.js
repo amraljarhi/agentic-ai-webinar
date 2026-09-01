@@ -129,7 +129,7 @@ function renderEmailHtml(firstName) {
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#f4f5f7;font-size:1px;">You're in. Tue 23 Sep, 10:00 CEST — your Microsoft Teams join link is inside.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;"><tr><td align="center" style="padding:24px 12px;">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e1e4e8;">
-<tr><td style="background:linear-gradient(90deg,#0d1117 0%,#1b1030 60%,#2a1a4a 100%);padding:28px 32px;">
+<tr><td style="background-color:#161029;background-image:linear-gradient(90deg,#0d1117 0%,#1b1030 60%,#2a1a4a 100%);padding:28px 32px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
 <td style="font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:bold;color:#fff;">GitHub <span style="color:#8b949e;font-weight:normal;">&times;</span> Eficode</td>
 <td align="right" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:bold;color:#d8bfff;letter-spacing:1.5px;">LIVE WEBINAR</td>
