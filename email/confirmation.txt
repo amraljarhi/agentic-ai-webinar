@@ -6,7 +6,7 @@ Hi {{first_name}},
 Thanks for registering — your spot is saved.
 
 WHEN
-Tuesday, 23 September 2026 · 10:00–11:10 CEST
+Thursday, 1 October 2026 · 10:00–11:10 CEST
 
 WHERE
 Online — Microsoft Teams

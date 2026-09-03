@@ -11,7 +11,7 @@ send both as a multipart email (HTML + plain-text fallback):
 ## Subject line
 
 ```
-You're registered: Beyond Copilot (23 Sep, 10:00 CEST) — your Teams link inside
+You're registered: Beyond Copilot (1 Oct, 10:00 CEST) — your Teams link inside
 ```
 
 ## Merge fields to replace before sending
@@ -46,5 +46,5 @@ CSV — it does not send email. Pick one of:
 ## Calendar attachment (optional)
 
 To let recipients one-click add the event, attach an `.ics` for
-2026-09-23 10:00–11:10 Europe/Copenhagen and point `{{calendar_ics_url}}` at it
+2026-10-01 10:00–11:10 Europe/Copenhagen and point `{{calendar_ics_url}}` at it
 (or attach the file directly and delete the "Add to calendar" line).

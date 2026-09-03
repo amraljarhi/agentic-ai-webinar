@@ -4,7 +4,7 @@ A static, **co-branded GitHub × Eficode** landing page that invites people to t
 **registers + qualifies** them as leads for GitHub and Eficode's AI-adoption motion.
 
 - **Event:** Beyond Copilot: Building Autonomous Developer Workflows
-- **When:** Tuesday, 23 September, 10:00 CEST (same as Denmark) · ~70 min incl. live Q&A
+- **When:** Thursday, 1 October, 10:00 CEST (same as Denmark) · ~70 min incl. live Q&A
 - **Format:** Live online webinar
 - **Live path:** `https://amraljarhi.github.io/agentic-ai-webinar/`
 

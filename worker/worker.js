@@ -107,7 +107,7 @@ const PASSCODE = "dh3D5kB9";
 const DIAL_IN = "+1 323-849-4874,,782105735#";
 const CONF_ID = "782 105 735#";
 const EVENT_TITLE = "Beyond Copilot: Building Autonomous Developer Workflows";
-const EVENT_WHEN = "Tuesday, 23 September 2026 · 10:00–11:10 CEST";
+const EVENT_WHEN = "Thursday, 1 October 2026 · 10:00–11:10 CEST";
 const REG_PAGE = "https://amraljarhi.github.io/agentic-ai-webinar/";
 const ICS_URL = "https://amraljarhi.github.io/agentic-ai-webinar/webinar.ics";
 
@@ -126,7 +126,7 @@ function renderEmailHtml(firstName) {
   const fn = htmlEscape(firstName);
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/></head>
 <body style="margin:0;padding:0;background:#f4f5f7;">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#f4f5f7;font-size:1px;">You're in. Tue 23 Sep, 10:00 CEST — your Microsoft Teams join link is inside.</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#f4f5f7;font-size:1px;">You're in. Thu 1 Oct, 10:00 CEST — your Microsoft Teams join link is inside.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;"><tr><td align="center" style="padding:24px 12px;">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e1e4e8;">
 <tr><td style="background-color:#161029;background-image:linear-gradient(90deg,#0d1117 0%,#1b1030 60%,#2a1a4a 100%);padding:28px 32px;">
@@ -209,7 +209,7 @@ async function sendConfirmationEmail(env, toEmail, fullName) {
   const firstName = firstNameFrom(fullName);
   const html = renderEmailHtml(firstName);
   const text = renderEmailText(firstName);
-  const subject = `You're registered: Beyond Copilot (23 Sep, 10:00 CEST) — your Teams link inside`;
+  const subject = `You're registered: Beyond Copilot (1 Oct, 10:00 CEST) — your Teams link inside`;
 
   // Provider 1: Power Automate flow (Office 365 Outlook).
   // The flow uses the "Draft an email message" action to CREATE A DRAFT in your mailbox
