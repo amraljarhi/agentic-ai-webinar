@@ -58,9 +58,24 @@ function json(body, status, cors) {
   });
 }
 
+// Base64 <-> UTF-8 helpers. GitHub returns/accepts base64 of the raw file bytes.
+// atob/btoa operate on Latin-1, so multibyte UTF-8 (å, ö, —) must be transcoded
+// explicitly or it corrupts into mojibake on each read-modify-write cycle.
+function utf8FromBase64(b64) {
+  return decodeURIComponent(escape(atob(b64)));
+}
+function base64FromUtf8(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
 async function ghGetFile(env) {
-  const url = `https://api.github.com/repos/${env.REPO_OWNER}/${env.REPO_NAME}/contents/${encodeURIComponent(env.FILE_PATH)}?ref=${env.BRANCH}`;
+  // Cache-bust + no-store: Cloudflare caches subrequests by default, which can
+  // return a STALE CSV/sha and let concurrent registrations overwrite each other
+  // (lost updates). Force a fresh read on every call.
+  const url = `https://api.github.com/repos/${env.REPO_OWNER}/${env.REPO_NAME}/contents/${encodeURIComponent(env.FILE_PATH)}?ref=${env.BRANCH}&t=${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const res = await fetch(url, {
+    cache: "no-store",
+    cf: { cacheTtl: 0, cacheEverything: false },
     headers: {
       Authorization: `Bearer ${env.GH_TOKEN}`,
       Accept: "application/vnd.github+json",
@@ -70,7 +85,7 @@ async function ghGetFile(env) {
   if (res.status === 404) return { exists: false, sha: null, content: "" };
   if (!res.ok) throw new Error(`GitHub GET failed: ${res.status} ${await res.text()}`);
   const data = await res.json();
-  const content = data.content ? atob(data.content.replace(/\n/g, "")) : "";
+  const content = data.content ? utf8FromBase64(data.content.replace(/\n/g, "")) : "";
   return { exists: true, sha: data.sha, content };
 }
 
@@ -78,7 +93,7 @@ async function ghPutFile(env, newContent, sha, message) {
   const url = `https://api.github.com/repos/${env.REPO_OWNER}/${env.REPO_NAME}/contents/${encodeURIComponent(env.FILE_PATH)}`;
   const body = {
     message,
-    content: btoa(unescape(encodeURIComponent(newContent))),
+    content: base64FromUtf8(newContent),
     branch: env.BRANCH,
   };
   if (sha) body.sha = sha;
@@ -292,7 +307,7 @@ export default {
 
     // Read-modify-write with retry on sha conflicts (concurrent submissions)
     let lastErr = "";
-    for (let attempt = 0; attempt < 4; attempt++) {
+    for (let attempt = 0; attempt < 6; attempt++) {
       try {
         const file = await ghGetFile(env);
         let base = file.exists ? file.content : HEADER;
@@ -304,10 +319,16 @@ export default {
           ctx.waitUntil(sendConfirmationEmail(env, form.get("Work email"), form.get("Full name")));
           return json({ ok: true }, 200, cors);
         }
-        if (res.status === 409 || res.status === 422) { lastErr = String(res.status); continue; } // conflict → retry
+        if (res.status === 409 || res.status === 422) {
+          lastErr = String(res.status);
+          // Randomized backoff so concurrent submissions don't retry in lockstep.
+          await new Promise((r) => setTimeout(r, 120 * (attempt + 1) + Math.floor(Math.random() * 200)));
+          continue;
+        }
         return json({ ok: false, error: `GitHub PUT ${res.status}: ${await res.text()}` }, 502, cors);
       } catch (e) {
         lastErr = e.message;
+        await new Promise((r) => setTimeout(r, 120 * (attempt + 1) + Math.floor(Math.random() * 200)));
       }
     }
     return json({ ok: false, error: `Failed after retries: ${lastErr}` }, 502, cors);
