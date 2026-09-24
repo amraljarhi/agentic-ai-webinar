@@ -69,12 +69,14 @@ function base64FromUtf8(str) {
 }
 
 async function ghGetFile(env) {
-  // Cache-bust + no-store: Cloudflare caches subrequests by default, which can
-  // return a STALE CSV/sha and let concurrent registrations overwrite each other
-  // (lost updates). Force a fresh read on every call.
+  // Cache-bust: Cloudflare caches subrequests by default, which can return a
+  // STALE CSV/sha and let concurrent registrations overwrite each other (lost
+  // updates). A unique query string per call + cf cache hints forces a fresh
+  // read. NOTE: the standard `cache` RequestInit field is NOT implemented in the
+  // Workers runtime (throws "'cache' field ... is not implemented"), so we rely
+  // on the cache-busting URL and `cf` options instead.
   const url = `https://api.github.com/repos/${env.REPO_OWNER}/${env.REPO_NAME}/contents/${encodeURIComponent(env.FILE_PATH)}?ref=${env.BRANCH}&t=${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const res = await fetch(url, {
-    cache: "no-store",
     cf: { cacheTtl: 0, cacheEverything: false },
     headers: {
       Authorization: `Bearer ${env.GH_TOKEN}`,
